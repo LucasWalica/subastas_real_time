@@ -1,0 +1,90 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: projectdb
+      POSTGRES_USER: projectuser
+      POSTGRES_PASSWORD: projectpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - backend-network
+
+  backend:
+    build: .
+    restart: always
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./:/app
+      - staticfiles_data:/app/staticfiles  # Volumen compartido para staticfiles
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+    ports:
+      - "8000:8000"
+    command: ["bash", "/app/entrypoint.sh"]
+    networks:
+      - backend-network
+
+  celery_worker:
+    build: .
+    restart: always
+    depends_on:
+      - db
+      - redis
+    command: ["celery", "-A", "core", "worker", "--loglevel=info"]
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+    volumes:
+      - ./:/app
+      - staticfiles_data:/app/staticfiles  # Opcional si necesita acceder a staticfiles
+    networks:
+      - backend-network
+
+  celery_beat:
+    build: .
+    restart: always
+    depends_on:
+      - db
+      - redis
+    command: ["celery", "-A", "core", "beat", "--loglevel=info"]
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+    volumes:
+      - ./:/app
+      - staticfiles_data:/app/staticfiles  # Opcional
+    networks:
+      - backend-network
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - staticfiles_data:/app/staticfiles  # Monta el mismo volumen que backend
+      - ./media:/app/media
+    depends_on:
+      - backend
+    networks:
+      - backend-network
+
+volumes:
+  postgres_data:
+  staticfiles_data:   # Volumen compartido para staticfiles
+
+networks:
+  backend-network:
+    driver: bridge
