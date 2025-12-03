@@ -8,6 +8,7 @@ User = get_user_model()
 
 # item 
 class Item(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     starting_price = models.PositiveIntegerField()  # en tokens

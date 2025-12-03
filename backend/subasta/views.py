@@ -15,16 +15,18 @@ from rest_framework import serializers
 class ItemCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ItemSerializer
-
+    
     def perform_create(self, serializer):
-        serializer.save()
+            serializer.save(owner=self.request.user)
+
 
 class ItemListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ItemSerializer
 
     def get_queryset(self):
-        return Item.objects.filter(auctionitem__auction__owner=self.request.user).distinct()
+        return Item.objects.filter(owner=self.request.user)
+
 
 class ItemDeleteView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
