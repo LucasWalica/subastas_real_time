@@ -24,6 +24,7 @@ class Auction(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    is_real_time = models.BooleanField(default=False)
     is_live = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
@@ -31,32 +32,48 @@ class Auction(models.Model):
         if self.is_closed:
             return
 
-        with transaction.atomic():  # asegura atomicidad
+        with transaction.atomic():
             for auction_item in self.auctionitem_set.all():
-                highest_bid = auction_item.bids.first()  # gracias al ordering, es la más alta
-                if highest_bid:
-                    winner = highest_bid.user
-                    if winner.token_balance >= highest_bid.amount:
-                        winner.token_balance -= highest_bid.amount
-                        winner.save()
+                bids = list(auction_item.bids.all())
 
-                        ItemGranted.objects.create(
-                            auction_item=auction_item,
-                            winner=winner,
-                            amount=highest_bid.amount
-                        )
-                        auction_item.is_awarded = True
-                        auction_item.save()
-                    else:
-                        # Si no tiene suficientes tokens, puedes notificar o marcar como sin adjudicar
-                        auction_item.is_awarded = False
-                        auction_item.save()
+                if not bids:
+                    auction_item.is_awarded = False
+                    auction_item.save()
+                    continue
+
+                # ordena de mayor a menor por si ordering falla
+                bids.sort(key=lambda b: b.amount, reverse=True)
+
+                winner = None
+
+                for bid in bids:
+                    if bid.user.token_balance >= bid.amount:
+                        winner = bid.user
+                        break
+
+                if winner:
+                    winner.token_balance -= bid.amount
+                    winner.save()
+
+                    ItemGranted.objects.create(
+                        auction_item=auction_item,
+                        winner=winner,
+                        amount=bid.amount
+                    )
+                    auction_item.is_awarded = True
+                else:
+                    auction_item.is_awarded = False
+
+                auction_item.save()
+
             self.is_closed = True
+            self.is_live = False
             self.save()
 
 
     def __str__(self):
-        return f"Auction: {self.item.name} ({self.id})"
+        return f"Auction {self.id}"
+
     
 
 class AuctionItem(models.Model):

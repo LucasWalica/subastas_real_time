@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Item, Auction, AuctionItem, Bid, ItemGranted
 from .serializers import ItemSerializer, AuctionSerializer, BidSerializer, ItemGrantedSerializer
 from django.shortcuts import get_object_or_404
-from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 # -------------------
 # Items
@@ -40,30 +40,48 @@ class ItemDeleteView(generics.DestroyAPIView):
         instance.delete()
 
 #falta update item
+class ItemUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+    queryset = Item.objects.all()
+
+    def get_object(self):
+        item = get_object_or_404(Item, id=self.kwargs['pk'], owner=self.request.user)
+        return item
 
 
 
 # -------------------
 # Auctions
 # -------------------
-
 class AuctionCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = AuctionSerializer
 
-    def create(self, request, *args, **kwargs):
-        items_ids = request.data.get('items', [])
-        auction = Auction.objects.create(
-            owner=request.user,
-            start_time=request.data['start_time'],
-            end_time=request.data['end_time'],
-            is_live=request.data.get('is_live', False)
-        )
+    def perform_create(self, serializer):
+        items_ids = self.request.data.get('items', [])
+
+        if not items_ids:
+            raise serializers.ValidationError("Debes añadir al menos un item a la subasta")
+
+        auction = serializer.save(owner=self.request.user)
+
         for item_id in items_ids:
             item = get_object_or_404(Item, id=item_id)
-            AuctionItem.objects.create(auction=auction, item=item, starting_price=item.starting_price)
-        serializer = self.get_serializer(auction)
-        return Response(serializer.data, status=201)
+
+            item = get_object_or_404(Item, id=item_id)
+
+    # Verificar que el item no esté en subastas activas
+            if AuctionItem.objects.filter(item=item, auction__is_closed=False).exists():
+                raise serializers.ValidationError(f"El item '{item.name}' ya está en una subasta activa")
+            
+            AuctionItem.objects.create(
+                auction=auction,
+                item=item,
+                starting_price=item.starting_price,
+            )
+
+
 
 # posible añadir paginacion
 class AuctionListActiveView(generics.ListAPIView):
@@ -71,7 +89,30 @@ class AuctionListActiveView(generics.ListAPIView):
     serializer_class = AuctionSerializer
 
     def get_queryset(self):
-        return Auction.objects.filter(is_closed=False)
+        queryset = Auction.objects.filter(is_closed=False)
+        is_real_time_param = self.request.query_params.get('is_real_time')
+
+        if is_real_time_param is not None:
+            # Convertimos el string a booleano
+            if is_real_time_param.lower() in ['true', '1', 't', 'yes']:
+                is_real_time = True
+            elif is_real_time_param.lower() in ['false', '0', 'f', 'no']:
+                is_real_time = False
+            else:
+                raise ValidationError({"is_real_time": "Valor inválido. Debe ser true o false."})
+
+            queryset = queryset.filter(is_real_time=is_real_time)
+
+        return queryset
+    
+
+class AuctionListByOwnerView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AuctionSerializer
+    
+    def get_queryset(self):
+        return Auction.objects.filter(owner=self.request.user)
+    
 
 class AuctionUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
