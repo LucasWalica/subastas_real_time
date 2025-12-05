@@ -4,19 +4,35 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-
-    colors:{
-      "custom1-charcoal-green": "#374030",
-      "custom1-hunter-green": "#4B5C3D",
-      "custom1-muted-olive": "#92A97F",
-      "custom1-hot-berry":"#D03073",
-      "custom1-raspberry-plum":"#BD2C88",
-      "custom1-mint": "#98FF98",
-      "custom1-emerald": "#50C878",
-      "custom1-midnight": "#2C2F33",
+    extend: {
+      colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        primary: "var(--primary)",
+        "primary-foreground": "var(--primary-foreground)",
+        secondary: "var(--secondary)",
+        "secondary-foreground": "var(--secondary-foreground)",
+        accent: "var(--accent)",
+        "accent-foreground": "var(--accent-foreground)",
+        muted: "var(--muted)",
+        "muted-foreground": "var(--muted-foreground)",
+        "hot-berry": "var(--custom1-hot-berry)",
+        "raspberry-plum": "var(--custom1-raspberry-plum)",
+        mint: "var(--custom1-mint)",
+        emerald: "var(--custom1-emerald)",
+        midnight: "var(--custom1-midnight)",
+        "hunter-green": "var(--custom1-hunter-green)",
+        "muted-olive": "var(--custom1-muted-olive)",
+        "charcoal-green": "var(--custom1-charcoal-green)",
+      },
+      borderRadius: {
+        sm: "var(--radius-sm)",
+        md: "var(--radius-md)",
+        lg: "var(--radius-lg)",
+        xl: "var(--radius-xl)",
+      },
     },
-    extend: {},
   },
+  darkMode: "class",
   plugins: [],
 }
-

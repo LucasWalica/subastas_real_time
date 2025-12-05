@@ -1,10 +1,279 @@
-<div class="flex flex-row [&>*]:w-20 [&>*]:h-20">
-    <div class="bg-custom1-hunter-green">1</div>
-    <div class="bg-custom1-muted-olive">2</div>
-    <div class="bg-custom1-charcoal-green">3</div>
-    <div class="bg-custom1-hot-berry">4</div>
-    <div class="bg-custom1-raspberry-plum">5</div>
-    <div class="bg-custom1-mint">12</div>
-    <div class="bg-custom1-emerald">13</div>
-    <div class="bg-custom1-midnight">14</div>
+<div class="min-h-screen bg-gradient-to-b from-white to-secondary/10">
+
+  <!-- Header -->
+  <header class="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+            ⚒️
+          </div>
+          <span class="text-primary">SubastaPro</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button 
+            (click)="onLogin()"
+            class="px-4 py-2 text-primary hover:text-hunter-green transition-colors"
+          >
+            Iniciar Sesión
+          </button>
+
+          <button 
+            (click)="onRegister()"
+            class="px-6 py-2 bg-accent text-white rounded-lg hover:bg-emerald transition-colors"
+          >
+            Registrarse
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+
+      <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 px-4 py-2 rounded-full mb-6">
+        ⚡ <span class="text-accent text-sm">Plataforma de Subastas en Tiempo Real</span>
+      </div>
+      
+      <h1 class="text-5xl md:text-6xl mb-6 text-primary max-w-4xl mx-auto">
+        Gestiona Subastas en Vivo y Temporizadas
+      </h1>
+
+      <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+        Una plataforma completa para crear, gestionar y participar en subastas. 
+        Conecta vendedores y compradores en tiempo real con tecnología de punta.
+      </p>
+
+      <div class="flex items-center justify-center gap-4 mb-16">
+        <button 
+          (click)="onRegister()"
+          class="px-8 py-4 bg-accent text-white rounded-lg hover:bg-emerald transition-colors shadow-lg"
+        >
+          Comenzar Ahora
+        </button>
+
+        <button class="px-8 py-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+          Ver Demo
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+        <div class="text-center">
+          <p class="text-4xl text-hot-berry mb-2">1000+</p>
+          <p class="text-gray-600">Subastas Activas</p>
+        </div>
+        <div class="text-center">
+          <p class="text-4xl text-hot-berry mb-2">50K+</p>
+          <p class="text-gray-600">Usuarios Registrados</p>
+        </div>
+        <div class="text-center">
+          <p class="text-4xl text-hot-berry mb-2">$2M+</p>
+          <p class="text-gray-600">En Transacciones</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-20 px-4 bg-white">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="text-center mb-16">
+        <h2 class="text-4xl mb-4 text-primary">Características Principales</h2>
+        <p class="text-gray-600 text-lg">
+          Todo lo que necesitas para gestionar subastas exitosas
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div class="bg-gradient-to-br from-primary/5 to-hunter-green/5 rounded-2xl p-8 border border-primary/10">
+          <div class="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mb-4">
+            ⚒️
+          </div>
+          <h3 class="mb-3 text-primary">Subastas en Vivo</h3>
+          <p class="text-gray-600">
+            Gestiona subastas en tiempo real con múltiples items. Control total del flujo de pujas y participantes.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-br from-hot-berry/5 to-raspberry-plum/5 rounded-2xl p-8 border border-hot-berry/10">
+          <div class="w-12 h-12 bg-hot-berry rounded-lg flex items-center justify-center mb-4">
+            🕒
+          </div>
+          <h3 class="mb-3 text-primary">Subastas Temporizadas</h3>
+          <p class="text-gray-600">
+            Configura fechas de inicio y fin. Los usuarios pujan hasta que el tiempo se agota automáticamente.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-br from-accent/5 to-mint/5 rounded-2xl p-8 border border-accent/10">
+          <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mb-4">
+            📈
+          </div>
+          <h3 class="mb-3 text-primary">Pujas Sincronizadas</h3>
+          <p class="text-gray-600">
+            Sistema de pujas en tiempo real. Todos los participantes ven las actualizaciones al instante.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-br from-secondary/5 to-muted-olive/5 rounded-2xl p-8 border border-secondary/10">
+          <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4">
+            👥
+          </div>
+          <h3 class="mb-3 text-primary">Gestión de Usuarios</h3>
+          <p class="text-gray-600">
+            Sistema completo de autenticación. Registro, login y perfiles de usuarios seguros.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-br from-mint/5 to-emerald/5 rounded-2xl p-8 border border-emerald/10">
+          <div class="w-12 h-12 bg-raspberry-plum rounded-lg flex items-center justify-center mb-4">
+            🛡️
+          </div>
+          <h3 class="mb-3 text-primary">Seguridad Garantizada</h3>
+          <p class="text-gray-600">
+            Protección de datos y transacciones. Sistema de verificación y autenticación robusta.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-br from-midnight/5 to-charcoal-green/5 rounded-2xl p-8 border border-midnight/10">
+          <div class="w-12 h-12 bg-midnight rounded-lg flex items-center justify-center mb-4">
+            🧩
+          </div>
+          <h3 class="mb-3 text-primary">Panel de Control</h3>
+          <p class="text-gray-600">
+            Dashboard intuitivo para gestionar todas tus subastas, items y ver estadísticas en tiempo real.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="text-center mb-16">
+        <h2 class="text-4xl mb-4 text-primary">¿Cómo Funciona?</h2>
+        <p class="text-gray-600 text-lg">
+          Comienza en 3 simples pasos
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-12">
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-6">
+            1
+          </div>
+          <h3 class="mb-3 text-primary">Regístrate</h3>
+          <p class="text-gray-600">
+            Crea tu cuenta gratuita en menos de un minuto. Completa tu perfil y verifica tu identidad.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-hot-berry rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-6">
+            2
+          </div>
+          <h3 class="mb-3 text-primary">Crea tu Subasta</h3>
+          <p class="text-gray-600">
+            Añade items, configura precios iniciales y elige entre subasta en vivo o temporizada.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-6">
+            3
+          </div>
+          <h3 class="mb-3 text-primary">Gestiona y Vende</h3>
+          <p class="text-gray-600">
+            Controla las pujas en tiempo real, interactúa con los participantes y cierra ventas exitosas.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-4 bg-gradient-to-r from-primary to-hunter-green">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-4xl mb-6 text-white">
+        ¿Listo para comenzar?
+      </h2>
+      <p class="text-xl text-white/90 mb-8">
+        Únete a miles de usuarios que ya están usando SubastaPro para gestionar sus subastas
+      </p>
+      <button 
+        (click)="onRegister()"
+        class="px-10 py-4 bg-white text-primary rounded-lg hover:bg-gray-100 transition-colors shadow-xl"
+      >
+        Crear Cuenta Gratis
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-midnight text-white py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+              ⚒️
+            </div>
+            <span>SubastaPro</span>
+          </div>
+          <p class="text-white/70 text-sm">
+            La plataforma líder de subastas en tiempo real
+          </p>
+        </div>
+
+        <div>
+          <h4 class="mb-4">Producto</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li><a href="#" class="hover:text-white">Características</a></li>
+            <li><a href="#" class="hover:text-white">Precios</a></li>
+            <li><a href="#" class="hover:text-white">Demo</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="mb-4">Empresa</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li><a href="#" class="hover:text-white">Acerca de</a></li>
+            <li><a href="#" class="hover:text-white">Blog</a></li>
+            <li><a href="#" class="hover:text-white">Contacto</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li><a href="#" class="hover:text-white">Privacidad</a></li>
+            <li><a href="#" class="hover:text-white">Términos</a></li>
+            <li><a href="#" class="hover:text-white">Cookies</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="border-t border-white/10 pt-8 text-center text-sm text-white/70">
+        <p>&copy; 2025 SubastaPro. Todos los derechos reservados.</p>
+      </div>
+
+    </div>
+  </footer>
+
 </div>

@@ -1,0 +1,63 @@
+<!-- dashboard.component.html -->
+<app-navbar></app-navbar>
+
+<main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Mis Subastas</h2>
+    <button (click)="createAuction()" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+      <!-- Plus icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nueva Subasta
+    </button>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div *ngFor="let auction of mockAuctions" class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <span [ngClass]="auction.type === 'live' ? 'text-red-500' : 'text-blue-500'">
+            {{ auction.type === 'live' ? 'En vivo' : 'Temporizada' }}
+          </span>
+        </div>
+      </div>
+
+      <h3 class="mb-2 font-semibold">{{ auction.title }}</h3>
+      <p class="text-gray-600 mb-4">{{ auction.items }} items</p>
+
+      <div *ngIf="auction.type === 'timed'" class="text-sm text-gray-600 mb-4">
+        <div>Inicio: {{ auction.startDate }}</div>
+        <div>Fin: {{ auction.endDate }}</div>
+      </div>
+
+      <div *ngIf="auction.type === 'live' && auction.status" class="text-sm mb-4">
+        <span [ngClass]="auction.status === 'En vivo' ? 'bg-green-100 text-green-600 px-2 py-1 rounded' : 'bg-gray-100 text-gray-700 px-2 py-1 rounded'">
+          {{ auction.status }}
+        </span>
+      </div>
+
+      <div class="flex gap-2">
+        <button (click)="auction.type === 'live' ? viewLiveAuction(auction.id) : viewTimedAuction(auction.id)"
+          class="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Ver
+        </button>
+        <button (click)="editAuction(auction.id)" class="p-2 border border-gray-300 rounded hover:bg-gray-50">
+          <!-- Edit icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4h2v16h-2zM4 11h16v2H4z" />
+          </svg>
+        </button>
+        <button 
+          (click)="this.deleteAuction()"
+          class="p-2 border border-red-500 text-red-500 rounded hover:bg-red-100">
+          <!-- Trash icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
