@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Item } from '../../../models/auction.models';
 import { Bid } from '../../../models/auction.models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-live-auction-detail',
@@ -11,6 +12,10 @@ import { Bid } from '../../../models/auction.models';
   styleUrl: './live-auction-detail.css',
 })
 export class LiveAuctionDetail {
+  
+  constructor(private router:Router){
+
+  }
   currentItemIndex = 0;
 
   items: Item[] = [
@@ -40,5 +45,9 @@ export class LiveAuctionDetail {
     if (this.currentItemIndex > 0) {
       this.currentItemIndex--;
     }
+  }
+
+  goBack(){
+    this.router.navigate(["/dashboard"])
   }
 }
