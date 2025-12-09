@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { Input, Output, EventEmitter } from '@angular/core';
 import { ChatPreview } from '../../../models/auction.models';
 import { CommonModule } from '@angular/common';
+import { Navbar } from "../../reusable/navbar/navbar";
 @Component({
   selector: 'app-chatlit',
-  imports: [CommonModule],
+  imports: [CommonModule, Navbar],
   templateUrl: './chatlit.html',
   styleUrl: './chatlit.css',
 })

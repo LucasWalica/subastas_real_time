@@ -7,7 +7,7 @@ from .serializers import ItemSerializer, AuctionSerializer, BidSerializer, ItemG
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-
+from rest_framework.views import APIView
 # -------------------
 # Items
 # -------------------
@@ -135,15 +135,19 @@ class AuctionDeleteView(generics.DestroyAPIView):
 # -------------------
 # Bids
 # -------------------
-
 class BidCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = BidSerializer
 
     def create(self, request, *args, **kwargs):
-        auction_item = get_object_or_404(AuctionItem, id=request.data['auction_item'])
-        amount = request.data['amount']
+        auction_item_id = self.kwargs['auction_item_id']
+        auction_item = get_object_or_404(AuctionItem, id=auction_item_id)
+
+        amount = int(request.data.get('amount', 0))
         user = request.user
+
+        if amount <= 0:
+            return Response({"error": "Invalid amount"}, status=400)
 
         if user.token_balance < amount:
             return Response({"error":"No tienes suficientes tokens"}, status=400)
@@ -153,12 +157,12 @@ class BidCreateView(generics.CreateAPIView):
             return Response({"error":"La puja debe ser mayor a la actual"}, status=400)
 
         bid = Bid.objects.create(auction_item=auction_item, user=user, amount=amount)
-        # opcional: restar tokens temporalmente
+        
         user.token_balance -= amount
         user.save()
 
-        serializer = self.get_serializer(bid)
-        return Response(serializer.data, status=201)
+        return Response(self.get_serializer(bid).data, status=201)
+
 
 class BidListView(generics.ListAPIView):
     permission_classes = [AllowAny]
@@ -178,3 +182,17 @@ class ItemGrantedListView(generics.ListAPIView):
 
     def get_queryset(self):
         return ItemGranted.objects.filter(winner=self.request.user)
+
+
+
+class WebRTCICEServersView(APIView):
+    """
+    Devuelve la lista de ICE servers (STUN/TURN) para WebRTC.
+    """
+    permission_classes = [IsAuthenticated]  # solo usuarios autenticados
+
+    def get(self, request, format=None):
+        ice_servers = [
+            {"urls": "stun:stun.l.google.com:19302"}
+        ]
+        return Response({"iceServers": ice_servers})

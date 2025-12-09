@@ -4,6 +4,7 @@ from .views import (
     AuctionUpdateView, AuctionDeleteView,
     BidCreateView, BidListView,
     ItemGrantedListView,
+    WebRTCICEServersView,
 )
 from django.urls import path 
 
@@ -31,10 +32,11 @@ urlpatterns = [
     # Bids
     # -------------------
     path("bids/<int:auction_item_id>/", BidListView.as_view(), name="bid-list"),
-    path("bids/create/", BidCreateView.as_view(), name="bid-create"),
+    path("bids/<int:auction_item_id>/place-bid/", BidCreateView.as_view(), name="bid-create"),
     
     # -------------------
     # Items Granted
     # -------------------
     path("granted/", ItemGrantedListView.as_view(), name="item-granted-list"),
+    path("webrtc/ice-servers/", WebRTCICEServersView.as_view(), name="webrtc-ice-servers"),
 ]
