@@ -10,5 +10,8 @@ export const routes: Routes = [
     // when added functionality, add index in the url 
     {path:"live-auction", loadComponent:() => import("./components/auction/live-auction-detail/live-auction-detail").then(m=>m.LiveAuctionDetail)},
     {path:"timed-auction", loadComponent:()=>import("./components/auction/timed-auction-detail/timed-auction-detail").then(m=>m.TimedAuctionDetail)},
+    {path:"chat-list", loadComponent:() => import("./components/chat/chatlit/chatlit").then(m=>m.Chatlit)},
+    {path: "chat", loadComponent:() => import("./components/chat/transaction-chat/transaction-chat").then(m=>m.TransactionChat)},
+    {path: "sales-admin", loadComponent:() => import("./components/auction/sales-admin-panel/sales-admin-panel").then(m=>m.SalesAdminPanel)},
     { path: "**", redirectTo: "home" },
 ];

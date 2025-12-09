@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Item } from '../../../models/auction.models';
 import { Bid } from '../../../models/auction.models';
 import { Router } from '@angular/router';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-live-auction-detail',
@@ -12,12 +13,16 @@ import { Router } from '@angular/router';
   styleUrl: './live-auction-detail.css',
 })
 export class LiveAuctionDetail {
-  
+
   constructor(private router:Router){
 
   }
   currentItemIndex = 0;
 
+  @Input() isAdmin: boolean = false;
+  @Input() connectedUsers: number = 47;
+
+  
   items: Item[] = [
     { id: 1, name: 'Pintura al Óleo', description: 'Obra de arte abstracto', currentBid: 5000, bids: 12 },
     { id: 2, name: 'Escultura de Bronce', description: 'Figura clásica', currentBid: 8500, bids: 8 },
@@ -49,5 +54,59 @@ export class LiveAuctionDetail {
 
   goBack(){
     this.router.navigate(["/dashboard"])
+  }
+
+
+  
+
+  chatMessages: any[] = [];
+ 
+  bidAmount = 0;
+  chatMessage = '';
+
+  onBack() {
+    console.log('Volver atrás');
+  }
+
+  placeBid() {
+    if (this.bidAmount <= this.currentItem.currentBid) return;
+
+    this.currentItem.currentBid = this.bidAmount;
+    this.currentItem.bids++;
+
+    this.bidHistory.unshift({
+      id: Date.now(),
+      user: 'Tú',
+      amount: this.bidAmount,
+      time: new Date().toLocaleTimeString()
+    });
+
+    this.chatMessages.push({
+      id: Date.now(),
+      type: 'bid',
+      user: 'Tú',
+      amount: this.bidAmount,
+      time: new Date().toLocaleTimeString()
+    });
+
+    this.bidAmount = 0;
+  }
+
+  sendMessage() {
+    if (!this.chatMessage.trim()) return;
+
+    this.chatMessages.push({
+      id: Date.now(),
+      type: 'message',
+      user: 'Tú',
+      message: this.chatMessage,
+      time: new Date().toLocaleTimeString()
+    });
+
+    this.chatMessage = '';
+  }
+
+  awardItem() {
+    alert(`Item adjudicado!`);
   }
 }

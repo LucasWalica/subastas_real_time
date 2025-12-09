@@ -1,0 +1,101 @@
+<!-- HEADER -->
+<header class="bg-white shadow-sm border-b">
+  <div class="max-w-5xl mx-auto px-4 py-4">
+    <button (click)="onBack()" class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4">
+      ⬅️ Volver a Chats
+    </button>
+
+    <div class="bg-gradient-to-r from-blue-50 to-pink-50 rounded-lg p-4 border border-blue-100">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 class="font-semibold">{{ mockTransaction.itemName }}</h2>
+          <p class="text-gray-600">
+            {{ userRole === 'buyer' ? 'Vendedor: ' + mockTransaction.sellerName : 'Comprador: ' + mockTransaction.buyerName }}
+          </p>
+        </div>
+        <div class="text-right">
+          <p class="text-pink-600 font-semibold text-lg">
+            ${{ mockTransaction.finalPrice | number }}
+          </p>
+
+          <!-- BADGE -->
+          <span
+            class="inline-block px-3 py-1 rounded-full border text-sm"
+            [ngClass]="{
+              'bg-yellow-100 text-yellow-800 border-yellow-200': paymentStatus === 'Pending',
+              'bg-blue-100 text-blue-800 border-blue-200': paymentStatus === 'Paid',
+              'bg-green-100 text-green-800 border-green-200': paymentStatus === 'Confirmed',
+              'bg-red-100 text-red-800 border-red-200': paymentStatus === 'Dispute'
+            }"
+          >
+            {{ paymentStatus }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- CHAT -->
+<main class="flex-1 overflow-y-auto">
+  <div class="max-w-5xl mx-auto px-4 py-6 space-y-4">
+    <ng-container *ngFor="let msg of mockMessages">
+      <!-- Mensaje de sistema -->
+      <div *ngIf="msg.sender === 'system'" class="flex justify-center">
+        <div class="bg-gray-200 text-gray-600 px-4 py-2 rounded-full max-w-md text-center">
+          {{ msg.message }}
+        </div>
+      </div>
+
+      <!-- Mensajes normales -->
+      <div *ngIf="msg.sender !== 'system'"
+           class="flex"
+           [ngClass]="{ 'justify-end': msg.sender === userRole, 'justify-start': msg.sender !== userRole }">
+        <div class="max-w-md">
+          <div
+            class="rounded-2xl px-4 py-3"
+            [ngClass]="{
+              'bg-blue-600 text-white rounded-br-sm': msg.sender === userRole,
+              'bg-white border border-gray-200 text-gray-800 rounded-bl-sm': msg.sender !== userRole
+            }"
+          >
+            {{ msg.message }}
+          </div>
+          <p class="text-xs text-gray-500 mt-1 text-right">{{ msg.time }}</p>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</main>
+
+<!-- ACCIONES DE PAGO -->
+<div *ngIf="paymentStatus !== 'Confirmed'" class="bg-white border-t p-3">
+  <div class="max-w-5xl mx-auto flex gap-2">
+    <button *ngIf="userRole === 'buyer' && paymentStatus === 'Pending'"
+            class="flex-1 bg-pink-600 text-white px-6 py-3 rounded-lg"
+            (click)="setPaymentStatus('Paid')">
+      ✔️ Marcar Pagado
+    </button>
+
+    <button *ngIf="userRole === 'seller' && paymentStatus === 'Paid'"
+            class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg"
+            (click)="setPaymentStatus('Confirmed')">
+      ✔️ Confirmar Pago
+    </button>
+  </div>
+</div>
+
+<!-- INPUT MENSAJE -->
+<div class="bg-white border-t px-4 py-4">
+  <div class="max-w-5xl mx-auto flex gap-2">
+    <input
+      [(ngModel)]="newMessage"
+      placeholder="Escribe un mensaje..."
+      class="flex-1 px-4 py-3 border border-gray-300 rounded-lg"
+    />
+    <button class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+            (click)="onSend()">
+      Enviar
+    </button>
+  </div>
+</div>

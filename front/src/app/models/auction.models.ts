@@ -37,3 +37,35 @@ export interface Activity {
   amount: number;
   timeAgo: string;
 }
+
+export interface ChatPreview {
+  id: number;
+  itemName: string;
+  otherParty: string;
+  lastMessage: string;
+  timestamp: string;
+  unread: number;
+  role: 'buyer' | 'seller';
+  status: 'Pending' | 'Paid' | 'Confirmed' | 'Dispute';
+}
+
+export type PaymentStatus = 'Pending' | 'Paid' | 'Confirmed' | 'Dispute';
+
+export interface ChatMessage {
+  id: number;
+  sender: 'buyer' | 'seller' | 'system';
+  message: string;
+  time: string;
+  date: string;
+}
+
+
+export interface Sale {
+  id: number;
+  itemName: string;
+  itemImage: string;
+  winnerName: string;
+  finalPrice: number;
+  auctionDate: string;
+  status: PaymentStatus;
+}
