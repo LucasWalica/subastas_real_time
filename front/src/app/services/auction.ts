@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { apiUrl } from './env.api';
 import { HttpClient } from '@angular/common/http';
-import { Item, Bid } from '../models/auction.models';
+import { Item, Bid, ItemGranted } from '../models/auction.models';
 @Injectable({
   providedIn: 'root',
 })
@@ -42,13 +42,16 @@ export class Auction {
     return this.http.get<Bid[]>(this.apiUrl + `bids/${auctionItemId}/`);
   }
   placeBid(auctionItemId: number, amount: number): Observable<any> {
-  return this.http.post<any>(
-    this.apiUrl + 'bids/create/',
-    { auction_item: auctionItemId, amount: amount }
-  );
-}
+    return this.http.post<any>(
+      this.apiUrl + 'bids/create/',
+      { auction_item: auctionItemId, amount: amount }
+    );
+  }
 
 
   /* Item Granted */
+  grantedItemList():Observable<ItemGranted[]>{
+    return this.http.get<ItemGranted[]>(this.apiUrl + 'granted/');
+  }
 
 }

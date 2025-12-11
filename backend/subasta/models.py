@@ -10,7 +10,7 @@ User = get_user_model()
 class Item(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    img = models.URLField()
+    img = models.URLField(blank=True)
     description = models.TextField(blank=True)
     starting_price = models.PositiveIntegerField()  # en tokens
     created_at = models.DateTimeField(auto_now_add=True)

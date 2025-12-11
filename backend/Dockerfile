@@ -9,6 +9,8 @@ WORKDIR /app
 # Copia el archivo de dependencias e instálalas
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+COPY core/subastas-b4972-firebase-adminsdk-fbsvc-c36ce648e1.json /app/core/
+
 
 # Copia el código de la aplicación al contenedor
 COPY . .

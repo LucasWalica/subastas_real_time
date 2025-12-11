@@ -6,10 +6,16 @@ from pathlib import Path
 
 env = environ.Env(debug=(bool, False))
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+import firebase_admin
+from firebase_admin import credentials
 
+cred_path = os.path.join(BASE_DIR, 'core', 'subastas-b4972-firebase-adminsdk-fbsvc-c36ce648e1.json')
+cred = credentials.Certificate(cred_path)
+firebase_admin.initialize_app(cred)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -21,10 +27,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+CORS_ALLOW_ALL_ORIGINS = False 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200"]
 
 AUTH_USER_MODEL = "user.CustomUser"
+
+CORS_ALLOW_CREDENTIALS = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,11 +84,24 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'user.auth.CookieJWTAuthentication', 
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+from datetime import timedelta
+
+# --- SIMPLE JWT ---
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+
+    # Configuración de cookies tuyas (no afecta JWT internamente)
+    "AUTH_COOKIE": "access_token",  
+    "AUTH_COOKIE_SECURE": False,      # True en producción
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SAMESITE": "None",
 }
 
 
