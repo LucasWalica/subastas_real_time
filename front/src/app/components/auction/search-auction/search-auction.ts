@@ -15,7 +15,7 @@ categories = [
     'Muebles', 'Coleccionables', 'Ropa y Accesorios', 'Deportes'
   ];
 
-  auctions: Auction[] = [
+  auctions: any[] = [
     { id: 5, title: 'Colección de Arte Digital NFT', type: 'timed', category: 'Arte y Antigüedades', items: 25, currentBid: 15000, participants: 48, endDate: '2025-12-12', owner: 'CryptoArtGallery' },
     { id: 6, title: 'MacBook Pro & Gadgets', type: 'live', category: 'Tecnología', items: 8, currentBid: 2500, participants: 23, status: 'En vivo', owner: 'TechDeals' },
     { id: 7, title: 'Relojes de Lujo Suizos', type: 'timed', category: 'Joyería', items: 12, currentBid: 45000, participants: 67, endDate: '2025-12-18', owner: 'LuxuryWatch' },

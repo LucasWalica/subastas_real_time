@@ -15,7 +15,7 @@ export class AdminPanel {
   constructor(private router:Router){
 
   }
-  mockAuctions: Auction[] = [
+  mockAuctions: any[] = [
     { id: 1, title: 'Subasta de Arte Contemporáneo', type: 'live', category: 'Arte y Antigüedades', items: 15, status: 'En vivo' },
     { id: 2, title: 'Antigüedades Europeas', type: 'timed', category: 'Arte y Antigüedades', items: 8, startDate: '2025-12-10', endDate: '2025-12-15' },
     { id: 3, title: 'Colección de Relojes Vintage', type: 'timed', category: 'Joyería', items: 12, startDate: '2025-12-08', endDate: '2025-12-20' },

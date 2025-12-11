@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PaymentStatus, Sale } from '../../../models/auction.models';
+import { PaymentStatus, ItemGranted } from '../../../models/auction.models';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-sales-admin-panel',
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 export class SalesAdminPanel {
   filterStatus: PaymentStatus | 'All' = 'All';
 
-  mockSales: Sale[] = [
+  mockSales: any[] = [
     { id: 1, itemName: 'Pintura al Óleo - Abstracto Moderno', itemImage: '', winnerName: 'Usuario123', finalPrice: 5000, auctionDate: '10 Dic 2025', status: 'Paid' },
     { id: 2, itemName: 'Escultura de Bronce - Figura Clásica', itemImage: '', winnerName: 'Coleccionista456', finalPrice: 8500, auctionDate: '9 Dic 2025', status: 'Confirmed' },
     { id: 3, itemName: 'Fotografía Vintage - Edición Limitada', itemImage: '', winnerName: 'ArtLover789', finalPrice: 2300, auctionDate: '8 Dic 2025', status: 'Pending' },
