@@ -35,6 +35,14 @@ AUTH_USER_MODEL = "user.CustomUser"
 
 CORS_ALLOW_CREDENTIALS = True
 
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # default, solo username
+    'user.backends.EmailBackend',  # si creas uno que busque por email
+]
+AUTHENTICATION_BACKENDS = ['user.backends.EmailBackend', 'django.contrib.auth.backends.ModelBackend']
+
+
 # Application definition
 
 INSTALLED_APPS = [

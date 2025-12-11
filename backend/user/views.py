@@ -32,10 +32,10 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        username = request.data.get("username")
+        email = request.data.get("email")
         password = request.data.get("password")
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
         if not user:
             return JsonResponse({"error": "Invalid credentials"}, status=401)
         if getattr(user, "is_banned", False):
@@ -57,7 +57,7 @@ class LoginView(APIView):
             key="access_token",
             value=str(access),
             httponly=True,
-            secure=False,      # True en producción HTTPS
+            secure=True,      # True en producción HTTPS
             samesite="None",   # o "Lax"/"Strict" según front y back
             max_age=60 * 60,   # coincidir con ACCESS_TOKEN_LIFETIME
             path="/"
@@ -68,7 +68,7 @@ class LoginView(APIView):
             key="firebase_token",
             value=firebase_token,
             httponly=True,
-            secure=False,      # True en producción HTTPS
+            secure=True,       # ✅ obligatorio con SameSite=None
             samesite="None",
             max_age=60 * 60,
             path="/"
