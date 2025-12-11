@@ -6,7 +6,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = '__all__'
-        read_only_fields = ['owner']
+        read_only_fields = ['owner', 'img', 'created_at']
 
 class AuctionItemSerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)

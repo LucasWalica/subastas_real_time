@@ -47,11 +47,17 @@ export class Auction {
       { auction_item: auctionItemId, amount: amount }
     );
   }
-
-
   /* Item Granted */
   grantedItemList():Observable<ItemGranted[]>{
     return this.http.get<ItemGranted[]>(this.apiUrl + 'granted/');
   }
+
+  /* upload image */
+  uploadImage(file: File): Observable<{url: string}> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.http.post<{url: string}>(this.apiUrl + "upload-image/", formData);
+  }
+
 
 }

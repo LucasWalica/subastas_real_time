@@ -1,5 +1,5 @@
 from .views import (
-    ItemCreateView, ItemListView, ItemDeleteView,ItemUpdateView,
+    ItemCreateWithImageView, ItemListView, ItemDeleteView,ItemUpdateView,
     AuctionCreateView, AuctionListActiveView, AuctionListByOwnerView,
     AuctionUpdateView, AuctionDeleteView,
     BidCreateView, BidListView,
@@ -15,7 +15,7 @@ urlpatterns = [
     # Items
     # -------------------
     path("items/", ItemListView.as_view(), name="item-list"),
-    path("items/create/", ItemCreateView.as_view(), name="item-create"),
+    path("items/create/", ItemCreateWithImageView.as_view(), name="item-create"),
     path("items/<int:pk>/delete/", ItemDeleteView.as_view(), name="item-delete"),
     path("items/<int:pk>/update/", ItemUpdateView.as_view(), name="item-update"),
 

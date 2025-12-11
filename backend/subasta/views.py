@@ -8,16 +8,46 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
+from firebase_admin import storage
+import uuid
 # -------------------
 # Items
 # -------------------
 
-class ItemCreateView(generics.CreateAPIView):
+class ItemCreateWithImageView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ItemSerializer
-    
-    def perform_create(self, serializer):
-            serializer.save(owner=self.request.user)
+
+    def post(self, request):
+        # Recuperar campos de item
+        name = request.data.get("name")
+        description = request.data.get("description", "")
+        starting_price = request.data.get("starting_price")
+        file = request.FILES.get("file")  # imagen
+
+        if not name or not starting_price:
+            return Response({"error": "Missing required fields"}, status=400)
+
+        img_url = ""
+        if file:
+            # generar nombre único
+            filename = f"items/{uuid.uuid4()}_{file.name}"
+            bucket = storage.bucket()
+            blob = bucket.blob(filename)
+            blob.upload_from_file(file, content_type=file.content_type)
+            blob.make_public()
+            img_url = blob.public_url
+
+        # Crear el item
+        item = Item.objects.create(
+            owner=request.user,
+            name=name,
+            description=description,
+            starting_price=starting_price,
+            img=img_url
+        )
+
+        serializer = ItemSerializer(item)
+        return Response(serializer.data, status=201)
 
 
 class ItemListView(generics.ListAPIView):
@@ -196,3 +226,4 @@ class WebRTCICEServersView(APIView):
             {"urls": "stun:stun.l.google.com:19302"}
         ]
         return Response({"iceServers": ice_servers})
+    
