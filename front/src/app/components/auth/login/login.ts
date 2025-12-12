@@ -29,7 +29,7 @@ export class Login {
     ).subscribe({
       next: (response) => {
         if(response.user){
-          this.router.navigate(['/home']);
+          this.router.navigate(['/dashboard']);
         }
       }, error: (err) => {
         console.log("error", err)

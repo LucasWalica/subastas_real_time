@@ -35,8 +35,11 @@ export interface Item {
   id: number;
   name: string;
   description: string;
-  bids: number;
+  img: string;
+  bids?: number;
+  starting_price?: number;
   timeLeft?:string;
+  created_at: string;
 }
 
 export interface AuctionItem {

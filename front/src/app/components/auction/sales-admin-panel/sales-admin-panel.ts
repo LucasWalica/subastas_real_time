@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { PaymentStatus, ItemGranted } from '../../../models/auction.models';
 import { CommonModule } from '@angular/common';
+import { Navbar } from "../../reusable/navbar/navbar";
+
 @Component({
   selector: 'app-sales-admin-panel',
-  imports: [CommonModule],
+  imports: [CommonModule, Navbar],
   templateUrl: './sales-admin-panel.html',
   styleUrl: './sales-admin-panel.css',
 })
 export class SalesAdminPanel {
-  filterStatus: PaymentStatus | 'All' = 'All';
+    filterStatus: PaymentStatus | 'All' = 'All';
 
   mockSales: any[] = [
     { id: 1, itemName: 'Pintura al Óleo - Abstracto Moderno', itemImage: '', winnerName: 'Usuario123', finalPrice: 5000, auctionDate: '10 Dic 2025', status: 'Paid' },
@@ -24,16 +26,29 @@ export class SalesAdminPanel {
       : this.mockSales.filter(s => s.status === this.filterStatus);
   }
 
-  setFilterStatus(status: PaymentStatus | 'All' ) {
-    this.filterStatus = status;
-  }
 
   get stats() {
     return {
-      total: this.mockSales.reduce((sum, sale) => sum + sale.finalPrice, 0),
+      total: this.mockSales.reduce((sum, s) => sum + s.finalPrice, 0),
       pending: this.mockSales.filter(s => s.status === 'Pending').length,
       confirmed: this.mockSales.filter(s => s.status === 'Confirmed').length,
-      disputes: this.mockSales.filter(s => s.status === 'Dispute').length
+      disputes: this.mockSales.filter(s => s.status === 'Dispute').length,
     };
   }
+
+  openChat(saleId: number) {
+    alert(`Abrir chat para venta #${saleId}`);
+  }
+
+
+  setFilterStatus(status: PaymentStatus | 'All') {
+    this.filterStatus = status;
+  }
+
+  onFilterClick(status: string) {
+    this.setFilterStatus(status as PaymentStatus | 'All');
+  }
+ 
+
+
 }

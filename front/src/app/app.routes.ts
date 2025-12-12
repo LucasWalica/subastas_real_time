@@ -13,5 +13,6 @@ export const routes: Routes = [
     {path:"chat-list", loadComponent:() => import("./components/chat/chatlit/chatlit").then(m=>m.Chatlit)},
     {path: "chat", loadComponent:() => import("./components/chat/transaction-chat/transaction-chat").then(m=>m.TransactionChat)},
     {path: "sales-admin", loadComponent:() => import("./components/auction/sales-admin-panel/sales-admin-panel").then(m=>m.SalesAdminPanel)},
+    {path:"item-admin", loadComponent:() => import("./components/auction/item-admin/item-admin").then(m=>m.ItemAdmin)},
     { path: "**", redirectTo: "home" },
 ];

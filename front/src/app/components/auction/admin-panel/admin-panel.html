@@ -1,63 +1,153 @@
-<!-- dashboard.component.html -->
 <app-navbar></app-navbar>
 
 <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between mb-6">
+
+  <!-- HEADER -->
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
     <h2 class="text-2xl font-bold">Mis Subastas</h2>
-    <button (click)="createAuction()" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-      <!-- Plus icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      Nueva Subasta
-    </button>
+
+    <div class="flex gap-3 flex-wrap">
+
+      <!-- Gestionar Items -->
+      <button 
+        (click)="this.goToItemAdmin()"
+        class="flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary/90"
+      >
+        <!-- Package icon -->
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 16V8a2 2 0 0 0 -1 -1.7L13 2.3a2 2 0 0 0 -2 0L4 6.3A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7 -4a2 2 0 0 0 1 -1.7z"/>
+        </svg>
+        Gestionar Items
+      </button>
+
+      <!-- Gestionar Ventas -->
+      <button 
+        (click)="this.goToSalesAdmin()"
+        class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90"
+      >
+        <!-- Dollar icon -->
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 1v22m4-17H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H8"/>
+        </svg>
+        Gestionar Ventas
+      </button>
+
+      <!-- Nueva Subasta -->
+      <button 
+        (click)="createAuction()"
+        class="flex items-center gap-2 bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent/90"
+      >
+        <!-- Plus icon -->
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 5v14m7-7H5"/>
+        </svg>
+        Nueva Subasta
+      </button>
+
+    </div>
   </div>
 
+  <!-- AUCTIONS GRID -->
   <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
     <div *ngFor="let auction of mockAuctions" class="bg-white rounded-lg shadow p-6">
+
+      <!-- TYPE + BADGE -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-2">
-          <span [ngClass]="auction.type === 'live' ? 'text-red-500' : 'text-blue-500'">
+
+          <!-- Icon -->
+          <svg 
+            class="w-5 h-5"
+            [ngClass]="auction.type === 'live' ? 'text-red-600' : 'text-blue-600'"
+            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+          >
+            <!-- Live icon (radio waves) -->
+            <ng-container *ngIf="auction.type === 'live'; else timedIcon">
+              <circle cx="12" cy="12" r="2"/>
+              <path d="M16 12a4 4 0 1 0 -4 4"/>
+              <path d="M20 12a8 8 0 1 0 -8 8"/>
+            </ng-container>
+
+            <!-- Timed icon (clock) -->
+            <ng-template #timedIcon>
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v5l3 3"/>
+            </ng-template>
+          </svg>
+
+          <!-- Badge -->
+          <span 
+            class="px-2 py-1 rounded text-sm"
+            [ngClass]="auction.type === 'live'
+              ? 'bg-red-100 text-red-600'
+              : 'bg-blue-100 text-blue-600'"
+          >
             {{ auction.type === 'live' ? 'En vivo' : 'Temporizada' }}
           </span>
+
         </div>
       </div>
 
+      <!-- TITLE -->
       <h3 class="mb-2 font-semibold">{{ auction.title }}</h3>
       <p class="text-gray-600 mb-4">{{ auction.items }} items</p>
 
+      <!-- TIMED INFO -->
       <div *ngIf="auction.type === 'timed'" class="text-sm text-gray-600 mb-4">
         <div>Inicio: {{ auction.startDate }}</div>
         <div>Fin: {{ auction.endDate }}</div>
       </div>
 
+      <!-- LIVE STATUS -->
       <div *ngIf="auction.type === 'live' && auction.status" class="text-sm mb-4">
-        <span [ngClass]="auction.status === 'En vivo' ? 'bg-green-100 text-green-600 px-2 py-1 rounded' : 'bg-gray-100 text-gray-700 px-2 py-1 rounded'">
+        <span 
+          class="px-2 py-1 rounded"
+          [ngClass]="auction.status === 'En vivo'
+            ? 'bg-green-100 text-green-600'
+            : 'bg-gray-100 text-gray-700'"
+        >
           {{ auction.status }}
         </span>
       </div>
 
+      <!-- ACTION BUTTONS -->
       <div class="flex gap-2">
-        <button (click)="auction.type === 'live' ? viewLiveAuction(auction.id) : viewTimedAuction(auction.id)"
-          class="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
+        <!-- VIEW -->
+        <button
+          (click)="auction.type === 'live'
+            ? viewLiveAuction(auction.id)
+            : viewTimedAuction(auction.id)"
+          class="flex-1 bg-primary text-white px-4 py-2 rounded hover:bg-primary/90"
+        >
           Ver
         </button>
-        <button (click)="editAuction(auction.id)" class="p-2 border border-gray-300 rounded hover:bg-gray-50">
-          <!-- Edit icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4h2v16h-2zM4 11h16v2H4z" />
-          </svg>
-        </button>
-        <button 
-          (click)="this.deleteAuction()"
-          class="p-2 border border-red-500 text-red-500 rounded hover:bg-red-100">
-          <!-- Trash icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-</main>
 
+        <!-- EDIT -->
+        <button 
+          (click)="editAuction(auction.id)"
+          class="p-2 border border-gray-300 rounded hover:bg-gray-50"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M11 4h2v16h-2zM4 11h16v2H4z"/>
+          </svg>
+        </button>
+
+        <!-- DELETE -->
+        <button 
+          (click)="deleteAuction()"
+          class="p-2 border border-red-500 text-red-500 rounded hover:bg-red-100"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>

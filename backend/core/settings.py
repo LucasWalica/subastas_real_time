@@ -105,11 +105,10 @@ from datetime import timedelta
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
 
-    # Configuración de cookies tuyas (no afecta JWT internamente)
-    "AUTH_COOKIE": "access_token",  
-    "AUTH_COOKIE_SECURE": False,      # True en producción
+    "AUTH_COOKIE": "access_token",
+    "AUTH_COOKIE_SECURE": False,
     "AUTH_COOKIE_HTTP_ONLY": True,
-    "AUTH_COOKIE_SAMESITE": "None",
+    "AUTH_COOKIE_SAMESITE": "Lax",   # <----
 }
 
 

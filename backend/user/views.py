@@ -57,9 +57,9 @@ class LoginView(APIView):
             key="access_token",
             value=str(access),
             httponly=True,
-            secure=True,      # True en producción HTTPS
-            samesite="None",   # o "Lax"/"Strict" según front y back
-            max_age=60 * 60,   # coincidir con ACCESS_TOKEN_LIFETIME
+            secure=False,      # local
+            samesite="Lax",    # <----- cambiar aquí
+            max_age=3600,
             path="/"
         )
 
@@ -69,7 +69,7 @@ class LoginView(APIView):
             value=firebase_token,
             httponly=True,
             secure=True,       # ✅ obligatorio con SameSite=None
-            samesite="None",
+            samesite="Lax",
             max_age=60 * 60,
             path="/"
         )
