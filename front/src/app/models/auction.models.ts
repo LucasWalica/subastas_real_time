@@ -32,14 +32,13 @@ export interface User {
 }
 
 export interface Item {
-  id: number;
+  id?: number;
+  owner?:User;
+  starting_price?:number;
   name: string;
   description: string;
   img: string;
-  bids?: number;
-  starting_price?: number;
-  timeLeft?:string;
-  created_at: string;
+  created_at?: string;
 }
 
 export interface AuctionItem {

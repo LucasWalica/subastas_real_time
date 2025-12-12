@@ -2,25 +2,36 @@ import os
 import environ 
 from celery.schedules import crontab
 from pathlib import Path
+import firebase_admin
+from firebase_admin import credentials, storage 
+from django.conf import settings 
 
 
 env = environ.Env(debug=(bool, False))
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-import firebase_admin
-from firebase_admin import credentials
+environ.Env.read_env(os.path.join(BASE_DIR, '.ENV'))
 
-cred_path = os.path.join(BASE_DIR, 'core', 'subastas-b4972-firebase-adminsdk-fbsvc-c36ce648e1.json')
-cred = credentials.Certificate(cred_path)
-firebase_admin.initialize_app(cred)
+
+FIREBASE_CREDENTIALS = os.path.join(BASE_DIR, 'core', env("FIREBASE_CONF_JSON"))  # JSON de credenciales
+FIREBASE_STORAGE_BUCKET = env("FIREBASE_STORAGE_BUCKET")  # ej: "subastas-b4972.appspot.com"
+
+
+if not firebase_admin._apps:  # Evita inicializar varias veces
+    cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS)
+    firebase_admin.initialize_app(cred, {
+        "storageBucket": settings.FIREBASE_STORAGE_BUCKET
+    })
+
+# Referencia al bucket
+bucket = storage.bucket()
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rcd2(a9_gvdm7sy9xx-lij+@al1yokh$x$yoh6oj17zhpdykxc'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

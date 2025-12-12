@@ -1,5 +1,5 @@
-<div class="min-h-screen bg-gray-50">
-    <app-navbar></app-navbar>
+<div class="min-h-screen bg-gray-50" [formGroup]="itemForm">
+  <app-navbar></app-navbar>
 
   <!-- Header -->
   <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -13,7 +13,6 @@
         (click)="openCreateModal()"
         class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
       >
-        <!-- plus icon -->
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
@@ -23,7 +22,7 @@
 
     <!-- No items -->
     <div *ngIf="items.length === 0" class="bg-white rounded-lg shadow p-12 text-center">
-      <!-- package icon -->
+
       <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" stroke-width="2"
         viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -43,8 +42,8 @@
 
     <!-- Items grid -->
     <div *ngIf="items.length > 0" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      
       <div *ngFor="let item of items" class="bg-white rounded-lg shadow overflow-hidden">
-
         <img *ngIf="item.img" [src]="item.img" [alt]="item.name" class="w-full h-48 object-cover">
 
         <div class="p-6">
@@ -61,7 +60,6 @@
               (click)="openEditModal(item)"
               class="flex-1 flex items-center justify-center gap-2 border border-gray-300 px-4 py-2 rounded hover:bg-gray-50"
             >
-              <!-- edit icon -->
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M16.862 3.487 20.5 7.125m-3.638-3.638-9.9 9.9-.862 4.538 4.538-.862 9.9-9.9M19 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/>
@@ -69,74 +67,86 @@
               Editar
             </button>
 
-            <button 
-              (click)="handleDelete(item.id)"
-              class="p-2 border border-red-500 text-red-500 rounded hover:bg-red-50"
-            >
-              <!-- trash icon -->
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1m-7 0h8"/>
-              </svg>
-            </button>
+            @if(item.id){
+              <button 
+                (click)="handleDelete(item.id)"
+                class="p-2 border border-red-500 text-red-500 rounded hover:bg-red-50"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0h8"/>
+                </svg>
+              </button>
+            }
           </div>
         </div>
       </div>
+
     </div>
 
   </div>
 
-  <!-- Modal -->
+  <!-- MODAL -->
   <div *ngIf="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
 
+    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
       <h2 class="text-xl font-semibold mb-6">
         {{ editingItem ? 'Editar Item' : 'Nuevo Item' }}
       </h2>
 
       <div class="space-y-4">
+
         <!-- Nombre -->
         <div>
           <label class="block text-gray-700 mb-2">Nombre del item</label>
-          <input type="text"
-                 [(ngModel)]="formData.name"
-                 class="w-full px-4 py-2 border rounded-lg focus:border-blue-600" />
+          <input type="text" formControlName="name"
+            class="w-full px-4 py-2 border rounded-lg focus:border-blue-600" />
         </div>
 
         <!-- Descripción -->
         <div>
           <label class="block text-gray-700 mb-2">Descripción</label>
-          <textarea [(ngModel)]="formData.description"
-                    class="w-full px-4 py-2 border rounded-lg h-24 focus:border-blue-600"></textarea>
+          <textarea formControlName="description"
+            class="w-full px-4 py-2 border rounded-lg h-24 focus:border-blue-600"></textarea>
         </div>
 
         <!-- Imagen -->
         <div>
-          <label class="block text-gray-700 mb-2">URL de la imagen</label>
-          <input type="text"
-                 [(ngModel)]="formData.img"
-                 class="w-full px-4 py-2 border rounded-lg focus:border-blue-600" />
+          <label class="block text-gray-700 mb-2">Imagen</label>
+          <input 
+            type="file" 
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="w-full px-4 py-2 border rounded-lg bg-white"
+          />
+
+          <!-- Preview -->
+          <img *ngIf="previewImage" 
+               [src]="previewImage" 
+               class="mt-3 w-full h-40 object-cover rounded-lg border" />
         </div>
 
         <!-- Precio -->
         <div>
           <label class="block text-gray-700 mb-2">Precio inicial (tokens)</label>
-          <input type="number"
-                 [(ngModel)]="formData.starting_price"
-                 min="0"
-                 class="w-full px-4 py-2 border rounded-lg focus:border-blue-600" />
+          <input type="number" min="1" formControlName="starting_price"
+            class="w-full px-4 py-2 border rounded-lg focus:border-blue-600" />
         </div>
+
       </div>
 
       <div class="flex gap-4 mt-6">
-        <button (click)="showModal=false"
-                class="flex-1 border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50">
+        <button 
+          (click)="showModal=false"
+          class="flex-1 border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50">
           Cancelar
         </button>
 
-        <button (click)="handleSave()"
-                [disabled]="!formData.name || !formData.starting_price"
-                class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300">
+        <button 
+          (click)="handleSave()"
+          [disabled]="itemForm.invalid"
+          class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300"
+        >
           {{ editingItem ? 'Guardar Cambios' : 'Crear Item' }}
         </button>
       </div>

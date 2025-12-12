@@ -15,9 +15,10 @@ export class Auction {
   getOwnitems(): Observable<Item[]> {
     return this.http.get<Item[]>(this.apiUrl + 'items/', { withCredentials: true });
   }
-  createNewItem(item:Item):Observable<any>{
-    return this.http.post<any>(this.apiUrl + 'items/create/', item, { withCredentials: true });
+  createNewItem(data: FormData) {
+    return this.http.post(`${this.apiUrl}items/create/`, data, { withCredentials: true });
   }
+
   deleteItem(itemId:number):Observable<any>{
     return this.http.delete<any>(this.apiUrl + `items/${itemId}/delete/`, { withCredentials: true });
   }
