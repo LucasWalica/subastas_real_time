@@ -41,49 +41,6 @@ class Auction(models.Model):
     is_live = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
-    def close_auction(self):
-        if self.is_closed:
-            return
-
-        with transaction.atomic():
-            for auction_item in self.auctionitem_set.all():
-                bids = list(auction_item.bids.all())
-
-                if not bids:
-                    auction_item.is_awarded = False
-                    auction_item.save()
-                    continue
-
-                # ordena de mayor a menor por si ordering falla
-                bids.sort(key=lambda b: b.amount, reverse=True)
-
-                winner = None
-
-                for bid in bids:
-                    if bid.user.token_balance >= bid.amount:
-                        winner = bid.user
-                        break
-
-                if winner:
-                    winner.token_balance -= bid.amount
-                    winner.save()
-
-                    ItemGranted.objects.create(
-                        auction_item=auction_item,
-                        winner=winner,
-                        amount=bid.amount
-                    )
-                    auction_item.is_awarded = True
-                else:
-                    auction_item.is_awarded = False
-
-                auction_item.save()
-
-            self.is_closed = True
-            self.is_live = False
-            self.save()
-
-
     def __str__(self):
         return f"Auction {self.id}"
 

@@ -87,7 +87,10 @@ CELERY_BROKER_URL = 'redis://redis:6379/1'  # Base de datos diferente
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
-   
+    'close-finished-auctions-every-minute': {
+        'task': 'subasta.tasks.close_finished_auctions',
+        'schedule': crontab(minute='*'),  # Ejecutar cada minuto
+    },
 }
 
 MIDDLEWARE = [
