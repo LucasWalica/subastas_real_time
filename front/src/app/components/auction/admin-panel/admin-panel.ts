@@ -1,70 +1,69 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Auction as auctionService } from '../../../services/auction';
-import { Auction } from '../../../services/auction';
+import { ApiService } from '../../../services/api.service';
 import { Navbar } from '../../reusable/navbar/navbar';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-admin-panel',
   imports: [CommonModule, Navbar],
   templateUrl: './admin-panel.html',
   styleUrl: './admin-panel.css',
 })
-export class AdminPanel implements OnInit{
+export class AdminPanel implements OnInit {
+  auctions: any[] = [];
 
-  mockAuctions: any[] = [
-    { id: 1, title: 'Subasta de Arte Contemporáneo', type: 'live', category: 'Arte y Antigüedades', items: 15, status: 'En vivo' },
-    { id: 2, title: 'Antigüedades Europeas', type: 'timed', category: 'Arte y Antigüedades', items: 8, startDate: '2025-12-10', endDate: '2025-12-15' },
-    { id: 3, title: 'Colección de Relojes Vintage', type: 'timed', category: 'Joyería', items: 12, startDate: '2025-12-08', endDate: '2025-12-20' },
-    { id: 4, title: 'Subasta Benéfica', type: 'live', category: 'Arte y Antigüedades', items: 20, status: 'Programada' },
-  ];
-
-  auctions:Auction[] = [] as Auction[];
-
-  constructor(private router:Router, private auctionService:auctionService){
-
-  }
+  constructor(private router: Router, private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.auctionService.getOwnitems().subscribe({
-      next: (response) => {
-        console.log(response)
-      }
-    })
+    this.loadAuctions();
   }
 
-
-  
-
+  loadAuctions(): void {
+    this.apiService.getAuctionsByOwner().subscribe({
+      next: (response) => {
+        this.auctions = response;
+      },
+      error: (error) => {
+        console.error('Error fetching auctions:', error);
+      },
+    });
+  }
 
   createAuction() {
-    this.router.navigate(["/create-auction"])
+    this.router.navigate(['/create-auction']);
   }
 
   editAuction(id: number) {
-    // add logic to inyect auction information
-    this.router.navigate(["/create-auction"])    
+    this.router.navigate(['/create-auction', { auctionId: id }]);
   }
 
-  deleteAuction(){
-    // add logic to delete auction with confirmation dialog
-    alert("wanna delete auction?");
+  deleteAuction(id: number) {
+    if (confirm('Are you sure you want to delete this auction?')) {
+      this.apiService.deleteAuction(id).subscribe({
+        next: () => {
+          this.loadAuctions();
+        },
+        error: (error) => {
+          console.error('Error deleting auction:', error);
+        },
+      });
+    }
   }
 
   viewLiveAuction(id: number) {
-    this.router.navigate(["/live-auction"])
+    this.router.navigate(['/live-auction', { auctionId: id }]);
   }
 
   viewTimedAuction(id: number) {
-    this.router.navigate(["/timed-auction"])
+    this.router.navigate(['/timed-auction', { auctionId: id }]);
   }
 
-  goToSalesAdmin(){
-    this.router.navigate(["/sales-admin"])
+  goToSalesAdmin() {
+    this.router.navigate(['/sales-admin']);
   }
 
-  goToItemAdmin(){
-    this.router.navigate(["/item-admin"])
+  goToItemAdmin() {
+    this.router.navigate(['/item-admin']);
   }
-
 }
